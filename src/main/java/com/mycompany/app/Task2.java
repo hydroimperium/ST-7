@@ -7,24 +7,26 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Task2 {
-    public static void getIpAddress() {
+    public static void run() {
         try {
             URL url = new URL("https://api.ipify.org/?format=json");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(10000);
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             String inputLine;
             StringBuilder response = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
             in.close();
-            
+
             JSONObject json = new JSONObject(response.toString());
             System.out.println("IP Address: " + json.getString("ip"));
         } catch (Exception e) {
-            System.out.println("Error in Task 2: " + e.toString());
+            System.out.println("Task 2 error: " + e.getMessage());
         }
     }
 }
